@@ -12,19 +12,18 @@ const {
 function buildToken(user) {
 
   const payload = {
-    subject: user.id,
     username: user.username,
+    subject: user.id,
   }
 
   const options = {
-    expiresIn: "1d",
+    expiresIn: "3d",
   }
 
   return jwt.sign(payload, JWT_SECRET, options);
 }
 
 router.post('/register', checkUsernameFree, (req, res, next) => {
-  res.end('implement register, please!');
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -65,7 +64,6 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
 });
 
 router.post('/login', checkUsernameExists, (req, res, next) => {
-  res.end('implement login, please!');
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -90,6 +88,7 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
       the response body should include a string exactly as follows: "invalid credentials".
   */
   const { username, password } = req.body
+
   if (!username || !password) {
     res.status(422).json({ message: "username and password required" })
   } else {
@@ -97,10 +96,12 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
       .then(([user]) => {
         const token = buildToken(user)
         if (bcrypt.compareSync(password, user.password)) {
-          res.json({ message: `welcome ${req.body.username}`, token })
+          res.json({ message: `welcome, ${req.body.username}`, token })
+        } else {
+          next({ status: 401, message: 'invalid credentials' })
         }
       })
-      .catch(res.status(401).json({ message: "invalid credentials" }))
+      .catch(next)
   }
 });
 

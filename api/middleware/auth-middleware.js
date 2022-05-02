@@ -3,7 +3,7 @@ const User = require('../auth/user-model')
 
 async function checkUsernameFree(req, res, next) {
   try {
-    const users = await User.findBy({ username: req.body.username })
+    const users = await User.findByUsername(req.body.username)
     if (!users.length) {
       next()
     }
@@ -17,7 +17,7 @@ async function checkUsernameFree(req, res, next) {
 
 async function checkUsernameExists(req, res, next) {
   try {
-    const users = await User.findBy({ username: req.body.username })
+    const users = await User.findByUsername(req.body.username)
     if (!users.length) {
       next({ "message": "invalid credentials", status: 401 })
     }
