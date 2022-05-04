@@ -55,7 +55,8 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
   if (!username || !password) {
     res.status(422).json({ message: "username and password required" })
   } else {
-    User.add({ username: username, password: hash })
+    const user = { username, password: hash}
+    User.add(user)
       .then((newUser) => {
         res.status(201).json(newUser);
       })
