@@ -6,7 +6,8 @@ const User = require('./user-model')
 
 const {
   checkUsernameExists,
-  checkUsernameFree
+  checkUsernameFree,
+  checkCredentials
 } = require('../middleware/auth-middleware')
 
 function buildToken(user) {
@@ -23,7 +24,7 @@ function buildToken(user) {
   return jwt.sign(payload, JWT_SECRET, options);
 }
 
-router.post('/register', checkUsernameFree, (req, res, next) => {
+router.post('/register', checkCredentials, checkUsernameFree, (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -64,7 +65,7 @@ router.post('/register', checkUsernameFree, (req, res, next) => {
   }
 });
 
-router.post('/login', checkUsernameExists, (req, res, next) => {
+router.post('/login', checkCredentials, checkUsernameExists, (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.

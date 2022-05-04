@@ -15,6 +15,15 @@ async function checkUsernameFree(req, res, next) {
   }
 }
 
+const checkCredentials = (req, res, next) => {
+  const { username, password } = req.body
+  if (!username || !password) {
+    next({ status: 400, message: 'username and password required'})
+  } else {
+    next()
+  }
+}
+
 async function checkUsernameExists(req, res, next) {
   try {
     const users = await User.findByUsername(req.body.username)
@@ -34,4 +43,5 @@ async function checkUsernameExists(req, res, next) {
 module.exports = {
   checkUsernameFree,
   checkUsernameExists,
+  checkCredentials
 }
